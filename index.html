@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DMD – Die Mark Digital • Founder / Investor / Trader</title>
+  <meta name="description" content="DMD Ökosystem DApp für Founder, Investor & Trader – GitHub Pages build mit Rollen & Whitelist-Gating." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --gold-1:#f5d36d; --gold-2:#e7b95b; --gold-3:#d6a24a; --gold-4:#b7822f; --gold-5:#8f6321;
+      --ink:#0a0a0a; --ok:#0a7c2f; --warn:#b45309; --err:#b91c1c; --muted:#6b7280;
+      --card-bg: rgba(255,255,255,0.85);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{ margin:0; color:#0a0a0a; font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background: linear-gradient(135deg,var(--gold-1),var(--gold-2) 30%,var(--gold-3) 55%,var(--gold-4) 80%,var(--gold-5) 100%); background-attachment: fixed; }
+    header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:18px 20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 35%, #fff6, #0000), linear-gradient(145deg,#faf0c3,#a1772a);
+      box-shadow:0 2px 10px #0003, inset 0 1px 0 #fff8, inset 0 -2px 6px #0002;}
+    .title{font-family:'UnifrakturCook', serif; font-size:28px; letter-spacing:.5px; color:#000}
+    .subtitle{font-size:12px; color:#111; opacity:.8; margin-top:-6px}
+    .wallet-row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    button, .btn{appearance:none;border:none; background:#111; color:#fff; padding:10px 14px; border-radius:12px; font-weight:600; cursor:pointer; box-shadow:0 2px 6px #0003}
+    button.ghost{background:#0000; color:#111; border:2px solid #111}
+    button.warn{background:var(--warn);} button.err{background:var(--err);} button[disabled]{opacity:.45; cursor:not-allowed}
+    .container{max-width:1200px;margin:0 auto; padding:0 16px 48px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap; position:sticky; top:0; padding:10px 0 14px; backdrop-filter: blur(6px)}
+    .tab{padding:10px 14px;border-radius:999px;background:#000000cc;color:#fff;cursor:pointer;font-weight:600}
+    .tab[data-active="true"]{background:#fff;color:#111; border:2px solid #111}
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:14px}
+    .card{grid-column: span 12; background:var(--card-bg); border-radius:18px; padding:16px; box-shadow:0 6px 18px #0002}
+    @media(min-width:900px){.card.span6{grid-column: span 6}.card.span4{grid-column: span 4}.card.span8{grid-column: span 8}}
+    .card h3{margin:0 0 8px; font-size:18px; letter-spacing:.2px}
+    .card .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:12px}
+    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .row > *{flex:1}
+    label{font-size:12px; color:#222; font-weight:600; display:block; margin:6px 0 4px}
+    input, select, textarea{width:100%; padding:10px 12px; border-radius:12px; border:1px solid #0003; outline:none; background:white}
+    .muted{color:var(--muted)}
+    .kpi{display:flex;flex-direction:column; gap:2px}
+    .kpi .label{font-size:12px;color:#555}
+    .kpi .value{font-size:20px;font-weight:800}
+    .headerKpis{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+    .dm-banner{font-family:'UnifrakturCook',serif; background:#000; color:#f7d87a; padding:8px 12px; border-radius:12px; box-shadow: inset 0 0 0 2px #f7d87a}
+    .disclaimer{font-size:12px;color:#333}
+    .status{font-size:13px;margin-top:6px}
+    .pill{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:#fff; border:1px solid #0002}
+    .badge{font-size:11px; padding:6px 10px; border-radius:999px; background:#000; color:#fff}
+    footer{padding:24px; text-align:center; color:#111; font-size:12px}
+    .hr{height:1px; background:#0002; margin:14px 0}
+    details summary{cursor:pointer; font-weight:700}
+    .chart{width:100%; height:280px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Die Mark Digital</div>
+        <div class="subtitle">DMD • Founder / Investor / Trader</div>
+      </div>
+    </div>
+    <div class="wallet-row">
+      <div class="headerKpis">
+        <div class="kpi"><div class="label">Preis (manuell)</div><div class="value" id="kpi-price">$0.0100</div></div>
+        <div class="kpi"><div class="label">Supply</div><div class="value" id="kpi-supply">—</div></div>
+        <div class="kpi"><div class="label">Market Cap</div><div class="value" id="kpi-mcap">—</div></div>
+      </div>
+      <span class="badge" id="roleBadge">Rolle: —</span>
+      <button id="connectBtn" class="btn">Wallet verbinden</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="dm-banner">Schriftart & Look: Deutsche‑Mark‑Style • Hintergrund: Gold • Einheitliches Branding für alle Apps</div>
+
+    <div class="tabs" role="tablist">
+      <div class="tab" data-tab="investor" data-active="true">Investor App</div>
+      <div class="tab" data-tab="trader">Trader App</div>
+      <div class="tab" data-tab="founder">Founder App</div>
+      <div class="tab" data-tab="settings">⚙️ Einstellungen</div>
+    </div>
+
+    <!-- INVESTOR APP -->
+    <section class="grid" data-panel="investor" aria-label="Investor App">
+      <div class="card span8">
+        <h3>Investieren / Kaufen</h3>
+        <div class="row">
+          <div>
+            <label for="buySol">SOL Betrag</label>
+            <input id="buySol" type="number" placeholder="z.B. 1.25" step="0.0001" min="0">
+          </div>
+          <div>
+            <label for="buySlippage">Slippage %</label>
+            <input id="buySlippage" type="number" value="0.5" step="0.1" min="0">
+          </div>
+          <div style="align-self:flex-end">
+            <button id="buyBtn">DMD kaufen</button>
+          </div>
+        </div>
+        <div class="disclaimer">Kauf‑Fee 16,5 % (65/35 Split). <b>Investitionsrange:</b> 0,5–10 SOL (größer nur mit Sondergenehmigung – bitte DMD Team kontaktieren).</div>
+        <div class="status" id="buyStatus"></div>
+      </div>
+
+      <div class="card span4">
+        <h3>Deine DMD</h3>
+        <div class="row" style="align-items:flex-end">
+          <div>
+            <div class="label">Wallet</div>
+            <div class="mono" id="walletAddr">– nicht verbunden –</div>
+          </div>
+          <button class="ghost" id="refreshBalances">Aktualisieren</button>
+        </div>
+        <div class="hr"></div>
+        <div class="row">
+          <div class="kpi"><div class="label">DMD Balance</div><div class="value" id="kpi-dmd">—</div></div>
+          <div class="kpi"><div class="label">SOL Balance</div><div class="value" id="kpi-sol">—</div></div>
+        </div>
+        <div class="hr"></div>
+        <details>
+          <summary>Analysen & Verlauf</summary>
+          <canvas id="chartMcap" class="chart"></canvas>
+        </details>
+      </div>
+
+      <div class="card span6">
+        <h3>Belohnungen claimen</h3>
+        <div class="row">
+          <button id="claimBtn">Rewards claimen</button>
+        </div>
+        <div class="disclaimer">Rewards kommen aus Treasury/Programm (gemäß IDL).</div>
+        <div class="status" id="claimStatus"></div>
+      </div>
+
+      <div class="card span6">
+        <h3>Verkaufen</h3>
+        <div class="row">
+          <div>
+            <label for="sellDmd">DMD Menge</label>
+            <input id="sellDmd" type="number" placeholder="z.B. 1000" step="1" min="0">
+          </div>
+          <div>
+            <label for="sellSlippage">Slippage %</label>
+            <input id="sellSlippage" type="number" value="0.5" step="0.1" min="0">
+          </div>
+          <div style="align-self:flex-end">
+            <button id="sellBtn" class="warn">DMD verkaufen</button>
+          </div>
+        </div>
+        <div class="disclaimer">Sell‑Fee 17,5 % (65/35 Split). Haltefristen & Penalties gem. Programm.</div>
+        <div class="status" id="sellStatus"></div>
+      </div>
+    </section>
+
+    <!-- TRADER APP -->
+    <section class="grid" data-panel="trader" hidden aria-label="Trader App">
+      <div class="card span8">
+        <h3>Schnellkauf / ‑verkauf</h3>
+        <div class="row">
+          <div><label for="quickAmount">Betrag</label><input id="quickAmount" type="number" placeholder="Menge (DMD oder SOL)"></div>
+          <div>
+            <label for="quickSide">Seite</label>
+            <select id="quickSide"><option>BUY (SOL → DMD)</option><option>SELL (DMD → SOL)</option></select>
+          </div>
+          <div style="align-self:flex-end"><button id="quickGo">Ausführen</button></div>
+        </div>
+        <div class="status" id="quickStatus"></div>
+      </div>
+      <div class="card span4">
+        <h3>Preis / Market Cap</h3>
+        <div class="row">
+          <div class="kpi"><div class="label">Preis (manuell)</div><div class="value" id="priceNow">$0.0100</div></div>
+          <div class="kpi"><div class="label">MCap (Schätzung)</div><div class="value" id="mcapNow">—</div></div>
+        </div>
+        <div class="hr"></div>
+        <label for="priceManual">Preis (USD) setzen</label>
+        <input id="priceManual" type="number" step="0.0001" value="0.01">
+        <div class="disclaimer">Preis‑Toggle: Handgesteuert oder künftig auto (DEX/Jupiter). Circulating Supply = Total – Founder‑Bestand.</div>
+      </div>
+      <div class="card span12">
+        <h3>Order‑/Event‑Log (nur UI)</h3>
+        <div id="eventLog" class="mono" style="white-space:pre-wrap; max-height:220px; overflow:auto"></div>
+      </div>
+    </section>
+
+    <!-- FOUNDER APP -->
+    <section class="grid" data-panel="founder" hidden aria-label="Founder App">
+      <div class="card span6">
+        <h3>Initialisierung</h3>
+        <div class="row">
+          <button id="initBtn">Initialize Vault & Programm</button>
+          <span class="pill">Nur Founder Wallet <code class="mono" id="founderPkPill"></code></span>
+        </div>
+        <div class="status" id="initStatus"></div>
+      </div>
+      <div class="card span6">
+        <h3>Public Sale</h3>
+        <div class="row">
+          <button id="toggleSaleBtn">Toggle Public Sale</button>
+          <span class="badge" id="saleState">unbekannt</span>
+        </div>
+        <div class="status" id="toggleStatus"></div>
+      </div>
+      <div class="card span6">
+        <h3>Whitelist verwalten</h3>
+        <div class="row">
+          <div><label for="wlAddr">Wallet Adresse</label><input id="wlAddr" placeholder="Wallet Pubkey"></div>
+        </div>
+        <div class="row">
+          <button id="wlAdd">Hinzufügen</button>
+          <button id="wlRemove" class="warn">Löschen</button>
+        </div>
+        <div class="status" id="wlStatus"></div>
+      </div>
+      <div class="card span6">
+        <h3>DMD Burn</h3>
+        <div class="row">
+          <div><label for="burnAmount">Menge (DMD)</label><input id="burnAmount" type="number" placeholder="z.B. 100000"></div>
+          <button id="burnBtn" class="err">Burn ausführen</button>
+        </div>
+        <div class="disclaimer">Burn kann entweder programmseitig (Method) oder SPL‑Token Burn sein – konfigurierbar in Einstellungen.</div>
+        <div class="status" id="burnStatus"></div>
+      </div>
+      <div class="card span12">
+        <h3>Ökosystem aktualisieren</h3>
+        <label for="ecoJson">Config JSON</label>
+        <textarea id="ecoJson" rows="6" placeholder='{"fees":{"buy":1650,"sell":1750,"splitFounder":65,"splitTreasury":35}}'></textarea>
+        <div class="row" style="margin-top:8px">
+          <button id="ecoUpdate">Update senden</button>
+          <button id="readVault" class="ghost">Vault auslesen</button>
+        </div>
+        <div class="status" id="ecoStatus"></div>
+      </div>
+    </section>
+
+    <!-- EINSTELLUNGEN / SYSTEM -->
+    <section class="grid" data-panel="settings" hidden aria-label="Einstellungen">
+      <div class="card span6">
+        <h3>Netzwerk & Adressen</h3>
+        <label for="rpcUrl">RPC URL</label>
+        <input id="rpcUrl" value="https://api.mainnet-beta.solana.com" placeholder="https://mainnet.helius-rpc.com/?api-key=...">
+        <label for="programId">Program ID</label>
+        <input id="programId" value="EDY4bp4fXWkAJpJhXUMZLL7fjpDhpKZQFPpygzsTMzro">
+        <div class="row">
+          <div>
+            <label for="mintAddr">DMD Mint</label>
+            <input id="mintAddr" value="3rCZT3Xw6jvU4JWatQPsivS8fQ7gV7GjUfJnbTk9Ssn5">
+          </div>
+          <div>
+            <label for="vaultAddr">Vault (SOL-PDA für BUY)</label>
+            <input id="vaultAddr" value="AfbZG6WHh462YduimCUmAvVi3jSjGfkaQCyEnYPeXwPF">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="founderAddr">Founder Wallet</label>
+            <input id="founderAddr" value="AqPFb5LWQuzKiyoKTX9XgUwsYWoFvpeE8E8uzQvnDTzT">
+          </div>
+          <div>
+            <label for="treasuryAddr">Treasury Wallet</label>
+            <input id="treasuryAddr" value="CEUmazdgtbUCcQyLq6NCm4BuQbvCsYFzKsS5wdRvZehV">
+          </div>
+        </div>
+        <div class="status" id="netStatus"></div>
+      </div>
+
+      <div class="card span6">
+        <h3>IDL / Methoden Mapping</h3>
+        <div class="disclaimer">Füge deine exakte Anchor‑IDL ein (lokal gespeichert). Für dich schon vorbelegt nach deiner IDL.</div>
+        <label for="idlInput">Anchor IDL JSON</label>
+        <textarea id="idlInput" rows="10" placeholder="{ ... deine dmd_anchor.json ... }"></textarea>
+        <div class="row" style="margin-top:8px">
+          <button id="saveIdl">IDL speichern</button>
+          <button id="clearIdl" class="ghost">IDL entfernen</button>
+        </div>
+        <details style="margin-top:8px">
+          <summary>Methoden‑Namen (gemäß IDL)</summary>
+          <div class="row">
+            <div><label for="mInitialize">initialize</label><input id="mInitialize" value="initialize"></div>
+            <div><label for="mToggleSale">toggle_public_sale</label><input id="mToggleSale" value="toggle_public_sale"></div>
+          </div>
+          <div class="row">
+            <div><label for="mWhitelistAdd">whitelist_add</label><input id="mWhitelistAdd" value="whitelist_add"></div>
+            <div><label for="mWhitelistRemove">(gleich wie add: status=false)</label><input id="mWhitelistRemove" value="whitelist_add"></div>
+          </div>
+          <div class="row">
+            <div><label for="mBuy">buy_dmd</label><input id="mBuy" value="buy_dmd"></div>
+            <div><label for="mSell">sell_dmd</label><input id="mSell" value="sell_dmd"></div>
+          </div>
+          <div class="row">
+            <div><label for="mClaim">claim_reward</label><input id="mClaim" value="claim_reward"></div>
+            <div><label for="mBurn">burnDmd (Programm) / SPL Burn</label><input id="mBurn" value="burnDmd"></div>
+          </div>
+          <div class="row">
+            <div><label for="mUpdate">updateConfig</label><input id="mUpdate" value="updateConfig"></div>
+          </div>
+        </details>
+        <div class="status" id="idlStatus"></div>
+      </div>
+
+      <div class="card span12">
+        <h3>Zugriffsrechte & Whitelist</h3>
+        <div class="disclaimer">Rollenlogik: <b>Founder</b> = Founder‑Wallet, <b>Investor</b> = per BuyerState‑PDA erkannt, <b>Trader</b> = Standard (kein Claim). Buttons sind zusätzlich hart abgesichert.</div>
+        <div class="row">
+          <div>
+            <label for="wlMode">Whitelist‑Modus</label>
+            <select id="wlMode">
+              <option value="buyerStatePda" selected>BuyerState‑PDA (seed "buyer", vault, wallet)</option>
+              <option value="none">Kein Whitelist‑Check (alle Trader)</option>
+            </select>
+          </div>
+          <div>
+            <label for="roleOverride">Rollen‑Override (Debug)</label>
+            <select id="roleOverride">
+              <option value="auto" selected>Auto</option>
+              <option value="FOUNDER">FOUNDER</option>
+              <option value="INVESTOR">INVESTOR</option>
+              <option value="TRADER">TRADER</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="wlSeed1">Seed 1 (fix)</label>
+            <input id="wlSeed1" value="buyer" readonly>
+          </div>
+          <div>
+            <label for="wlAccountName">Anchor Account‑Name</label>
+            <input id="wlAccountName" value="BuyerState" readonly>
+          </div>
+          <div>
+            <label for="wlFlagField">Whitelist‑Flag Feld</label>
+            <input id="wlFlagField" value="whitelisted" readonly>
+          </div>
+        </div>
+        <div class="row" style="align-items:flex-end">
+          <button id="testWhitelist" class="ghost">Whitelist jetzt prüfen</button>
+          <div class="status" id="wlCheckStatus"></div>
+        </div>
+      </div>
+
+      <div class="card span12">
+        <h3>Branding (metadata.json)</h3>
+        <div class="disclaimer">Optional <code>/metadata.json</code> im Repo, um Logos/Hintergründe zu setzen. Beispiel unten.</div>
+        <pre class="mono" id="metaExample" style="white-space:pre-wrap">{
+  "branding": {
+    "title": "Die Mark Digital",
+    "subtitle": "DMD • Founder / Investor / Trader",
+    "primaryColor": "#000000",
+    "accentGold": "#f5d36d",
+    "background": "gold",
+    "heroImage": "./assets/hero_dmd.png",
+    "logo": "./assets/dmd_logo.png"
+  }
+}</pre>
+        <div class="row"><button id="loadMetadata" class="ghost">metadata.json laden</button><div id="metaStatus" class="status"></div></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>© <span id="year"></span> Die Mark Digital • DMD. Keine Garantie; nutze auf eigene Verantwortung. </footer>
+
+  <!-- Charts JS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+  <!-- App Logic (Split 2/2) -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
